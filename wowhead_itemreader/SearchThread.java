@@ -17,17 +17,17 @@
 
 package wowhead_itemreader;
 
+import javax.swing.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class SearchThread extends Thread
 {
+
     private int itemId;
-    private int fromId;
-    private int toId;
-    private MainFrame wowhead;
-    private int addedIn;
-    private String lang;
+    private ArrayList<Integer> ids = new ArrayList<Integer>();
+    private final MainFrame wowhead;
+    private final int addedIn;
+    private final String lang;
     
     private ArrayList<WoWHeadData> items = new ArrayList<WoWHeadData>();
 
@@ -36,8 +36,18 @@ public class SearchThread extends Thread
         super();
         this.wowhead = wowhead;
         this.itemId = itemid;
-        this.fromId = fromid;
-        this.toId = toid;
+        for (int i = fromid; i <= toid; i++) {
+            ids.add(i);
+        }
+        this.addedIn = addedIn;
+        this.lang = lang;
+    }
+
+    public SearchThread(ArrayList<Integer> ids, MainFrame wowhead, int addedIn, String lang) {
+
+        super();
+        this.ids = ids;
+        this.wowhead = wowhead;
         this.addedIn = addedIn;
         this.lang = lang;
     }
@@ -48,15 +58,17 @@ public class SearchThread extends Thread
         WoWHeadData head = new WoWHeadData();
         StringBuilder sb = new StringBuilder();
         boolean selected = wowhead.deepCheckBox.isSelected();
-        if(wowhead.multiCheckBox.isSelected())
+        if(!ids.isEmpty())
         {
+            wowhead.queryPane.setText("");
             int count = 0;
-            for(int i = fromId; i<=toId; i++)
+            for(int id : ids)
             {
                 try
                 {
                     head = new WoWHeadData();
-                    head.search(i, lang, true, selected, addedIn);
+                    System.out.println("Searching item: " + id);
+                    head.search(id, lang, true, selected, addedIn);
                     wowhead.progressBar.setValue(count);
                     wowhead.progressBar.paint(wowhead.progressBar.getGraphics());
                     if(head.itemId > 0)
@@ -98,7 +110,7 @@ public class SearchThread extends Thread
             wowhead.showPicture(url, wowhead.picture);
             wowhead.nameField.setText(head.name);
             wowhead.idField.setText(String.valueOf(head.itemId));
-            if(!(wowhead.multiCheckBox.isSelected()))
+            if(!(wowhead.multiCheckBox.isSelected()) && ids.isEmpty())
             {
                 String createSql = head.createSql(wowhead.getCore());
                 sb = sb.append(createSql);

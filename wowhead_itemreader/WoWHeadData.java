@@ -332,7 +332,7 @@ public class WoWHeadData
             else if(nodeName.startsWith("error"))
             {
                 this.urlexists = false;
-                throw new Exception(n.getData().toString());
+                throw new Exception(n.getName() + "" + n.getData().toString());
             }
         }catch(NumberFormatException ex){}
     }

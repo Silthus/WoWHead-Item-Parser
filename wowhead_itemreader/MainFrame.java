@@ -72,6 +72,7 @@ public class MainFrame extends javax.swing.JFrame
         }
         itemIdLabel.setVisible(true);
         itemIdField.setVisible(true);
+        idListCheckBox.setVisible(true);
         fromLabel.setVisible(false);
         toLabel.setVisible(false);
         fromField.setVisible(false);
@@ -158,6 +159,7 @@ public class MainFrame extends javax.swing.JFrame
         itemIdLabel = new javax.swing.JLabel();
         itemIdField = new javax.swing.JTextField();
         multiCheckBox = new javax.swing.JCheckBox();
+        idListCheckBox = new JCheckBox();
         fromLabel = new javax.swing.JLabel();
         fromField = new javax.swing.JTextField();
         toLabel = new javax.swing.JLabel();
@@ -292,6 +294,9 @@ public class MainFrame extends javax.swing.JFrame
             }
         });
 
+        idListCheckBox.setText("Id list:");
+        idListCheckBox.setToolTipText("Parse a given list of item ids.");
+
         fromLabel.setText("From:");
 
         toLabel.setText("to");
@@ -352,6 +357,7 @@ public class MainFrame extends javax.swing.JFrame
                                 .addComponent(multiCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(deepCheckBox))
+                                .addComponent(idListCheckBox)
                             .addComponent(addedInBox, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(leftPanelLayout.createSequentialGroup()
@@ -371,6 +377,7 @@ public class MainFrame extends javax.swing.JFrame
                     .addComponent(coreComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(multiCheckBox)
                     .addComponent(deepCheckBox))
+                    .addComponent(idListCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fromLabel)
@@ -753,6 +760,7 @@ public class MainFrame extends javax.swing.JFrame
                                 .addComponent(multiCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(deepCheckBox))
+                                .addComponent(idListCheckBox)
                             .addComponent(addedInBox, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
@@ -769,6 +777,7 @@ public class MainFrame extends javax.swing.JFrame
                 .addContainerGap()
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deepCheckBox)
+                    .addComponent(idListCheckBox)
                     .addComponent(fromLabel)
                     .addComponent(fromField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(toLabel)
@@ -811,6 +820,7 @@ public class MainFrame extends javax.swing.JFrame
                         .addComponent(multiCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deepCheckBox))
+                        .addComponent(idListCheckBox)
                     .addGroup(leftPanelLayout.createSequentialGroup()
                         .addGap(113, 113, 113)
                         .addComponent(startButton)
@@ -831,6 +841,7 @@ public class MainFrame extends javax.swing.JFrame
                     .addComponent(coreComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(multiCheckBox)
                     .addComponent(deepCheckBox))
+                    .addComponent(idListCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addedInBox, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -857,45 +868,60 @@ public class MainFrame extends javax.swing.JFrame
         }
     }
 
+    private void startSearchTask(ArrayList<Integer> ids) {
+
+        if(t == null)
+        {
+            t = new SearchThread(ids, this, this.addedInBox.getSelectedIndex(), this.configHandler.getWowheadUrl());
+            t.start();
+        }
+        else
+        {
+            System.out.println("Programm already running !");
+        }
+    }
+
     public void threadFinished()
     {
         items = this.t.getQuerys();
         this.t = null;
     }
 
-    private void getInfo()
-    {
-        if(multiCheckBox.isSelected())
-        {
-            try
-            {
+    private void getInfo() {
+
+        if (idListCheckBox.isSelected()) {
+            String lines[] = queryPane.getText().split("\\r?\\n");
+            ArrayList<Integer> ids = new ArrayList<Integer>();
+            for (String line : lines) {
+                System.out.println("Adding id: " + line);
+                ids.add(Integer.parseInt(line));
+            }
+            System.out.println("Id list size: " + ids.size());
+            progressBar.setMaximum(ids.size());
+            progressBar.setValue(0);
+            progressBar.setStringPainted(true);
+            startSearchTask(ids);
+        } else if (multiCheckBox.isSelected()) {
+            try {
                 int fromid = Integer.parseInt(fromField.getText());
                 int toId = Integer.parseInt(toField.getText());
                 progressBar.setMaximum(toId - fromid);
                 progressBar.setValue(0);
                 progressBar.setStringPainted(true);
-                if(toId <= fromid)
-                {
+                if (toId <= fromid) {
                     JOptionPane.showMessageDialog(this, "ToId must be bigger than fromId!");
-                }
-                else
-                {
+                } else {
                     startSearchTask(0, fromid, toId);
                 }
-                }catch(Exception e)
-                {
-                    JOptionPane.showMessageDialog(this,"From Id and To Id must be a Number!");
-                }
-        }
-        else
-        {
-            try
-            {
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "From Id and To Id must be a Number!");
+            }
+        } else {
+            try {
                 int itemid = Integer.parseInt(itemIdField.getText());
                 startSearchTask(itemid, 0, 0);
-            }catch(Exception e)
-            {
-                JOptionPane.showMessageDialog(this,"Item Id must be a Number!");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Item Id must be a Number!");
             }
         }
     }
@@ -948,6 +974,7 @@ public class MainFrame extends javax.swing.JFrame
     private javax.swing.JPanel leftPanel;
     private javax.swing.JLabel logoLabel;
     public javax.swing.JCheckBox multiCheckBox;
+    public JCheckBox idListCheckBox;
     public javax.swing.JTextField nameField;
     public javax.swing.JLabel picture;
     public javax.swing.JProgressBar progressBar;
