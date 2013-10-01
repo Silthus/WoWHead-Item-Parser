@@ -17,14 +17,6 @@
 
 package wowhead_itemreader;
 
-import java.util.ArrayList;
-import wowhead_itemreader.core.ArcEmuSheme;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -34,8 +26,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import wowDatatypes.Spell;
 import wowDatatypes.SpellStats;
+import wowhead_itemreader.core.ArcEmuSheme;
 import wowhead_itemreader.core.MangosSheme;
+import wowhead_itemreader.core.RaidCraftSheme;
 import wowhead_itemreader.core.SkyfireSheme;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WoWHeadData
 {
@@ -647,6 +649,8 @@ public class WoWHeadData
             case 3:
                 sheme = new SkyfireSheme();
                 break;
+            case 4:
+                sheme = new RaidCraftSheme();
         }
         return sheme.getQuery(this);
     }

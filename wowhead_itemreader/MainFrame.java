@@ -23,8 +23,14 @@
 package wowhead_itemreader;
 
 import config.ConfigHandler;
-import java.awt.Desktop;
-import java.awt.MediaTracker;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,12 +42,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 
 /**
  *
@@ -318,7 +318,7 @@ public class MainFrame extends javax.swing.JFrame
             }
         });
 
-        coreComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ArcEmu", "Mangos", "Trinity", "Skyfire" }));
+        coreComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ArcEmu", "Mangos", "Trinity", "Skyfire", "RaidCraft" }));
 
         addedInBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NONE", "Added in patch 4.2.0", "Added in patch 4.1.0", "Added in patch 3.3.5", "No Cataclysm" }));
 
