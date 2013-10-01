@@ -22,7 +22,7 @@ public class RaidCraftSheme extends BasicSheme {
 
         int itemId = data.itemId;
         String query = "SET FOREIGN_KEY_CHECKS = 0; BEGIN;\n" +
-                "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
+                "INSERT IGNORE INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
                 "VALUES (\n" +
                 itemId + "," +
                 "'" + data.name + "'," +
@@ -32,20 +32,20 @@ public class RaidCraftSheme extends BasicSheme {
                 getSellPrice(data.sellPrice) + "," +
                 "'" + getItemClass(data.itemClass) + "'," +
                 "'WoW Import');\n" +
-                "INSERT INTO `rcitems_equipment` (id, item_id, equipment_slot, durability) \n" +
+                "INSERT IGNORE INTO `rcitems_equipment` (id, item_id, equipment_slot, durability) \n" +
                 "VALUES (\n" +
                 itemId + "," +
                 itemId + "," +
                 "'" + getEquipmentSlot(data.slot) + "'," +
                 data.durability + ");\n";
         if (getItemClass(data.itemClass) == ItemClass.ARMOR) {
-            query += "INSERT INTO `rcitems_armor` (equipment_id, armor_type, armor_value) \n" +
+            query += "INSERT IGNORE INTO `rcitems_armor` (equipment_id, armor_type, armor_value) \n" +
                     "VALUES (\n" +
                     itemId + "," +
                     "'" + getItemType(data.itemClass, data.itemSubClass) + "', " +
                     data.armor + ");\n";
         } else if (getItemClass(data.itemClass) == ItemClass.WEAPON) {
-            query += "INSERT INTO `rcitems_weapons` (equipment_id, weapon_type, min_damage, max_damage, swing_time) \n" +
+            query += "INSERT IGNORE INTO `rcitems_weapons` (equipment_id, weapon_type, min_damage, max_damage, swing_time) \n" +
                     "VALUES (\n" +
                     itemId + "," +
                     "'" + getItemType(data.itemClass, data.itemSubClass) + "', " +
@@ -56,7 +56,7 @@ public class RaidCraftSheme extends BasicSheme {
         // now lets parse the attributes
         for (SpellStats spellStats : data.spellStatsAr) {
             if (spellStats.getStatValue() > 0) {
-                query += "INSERT INTO `rcitems_equipment_attributes` (equipment_id, attribute, attribute_value) \n" +
+                query += "INSERT IGNORE INTO `rcitems_equipment_attributes` (equipment_id, attribute, attribute_value) \n" +
                         "VALUES (\n" +
                         itemId + "," +
                         "'" + AttributeType.fromId(spellStats.getStatType()) + "'," +
@@ -65,7 +65,7 @@ public class RaidCraftSheme extends BasicSheme {
         }
         // also insert an item level requirement for every item
         if (data.reqLevel > 1) {
-            query += "INSERT INTO `rcitems_attachments` (item_id, attachment_name, provider_name) \n" +
+            query += "INSERT IGNORE INTO `rcitems_attachments` (item_id, attachment_name, provider_name) \n" +
                     "VALUES (\n" +
                     itemId + "," +
                     "'level'," +
