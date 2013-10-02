@@ -639,7 +639,7 @@ public class MainFrame extends javax.swing.JFrame
                 for(WoWHeadData s : items)
                 {
                     if (s.name.contains("'")) {
-                        s.name = s.name.replace("'", "");
+                        s.name = s.name.replaceAll("'", "");
                     }
                     File temp = new File(f.getAbsolutePath() + File.separator + s.itemId + ".sql");
                     pw = new PrintWriter(temp);
@@ -653,7 +653,7 @@ public class MainFrame extends javax.swing.JFrame
                 pw = new PrintWriter(f);
                 for(WoWHeadData s : items) {
                     if (s.name.contains("'")) {
-                        s.name = s.name.replace("'", "");
+                        s.name = s.name.replaceAll("'", "");
                     }
                     pw.println(s.createSql(this.getCore()));
                 }
