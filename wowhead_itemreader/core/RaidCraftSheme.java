@@ -176,6 +176,21 @@ public class RaidCraftSheme extends BasicSheme {
                         return 277;
                 }
                 break;
+            case MACE:
+            case TWO_HAND_MACE:
+                switch (itemQuality) {
+                    case 0:
+                    case 1:
+                        // wood pickaxe
+                        return 270;
+                    case 2:
+                        return 274;
+                    case 3:
+                        return 257;
+                    case 4:
+                        return 278;
+                }
+                break;
             case CLOTH:
                 switch (inventoryType) {
                     // head
