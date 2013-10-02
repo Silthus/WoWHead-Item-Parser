@@ -638,9 +638,6 @@ public class MainFrame extends javax.swing.JFrame
             {
                 for(WoWHeadData s : items)
                 {
-                    if (s.name.contains("'")) {
-                        s.name = s.name.replaceAll("'", "");
-                    }
                     File temp = new File(f.getAbsolutePath() + File.separator + s.itemId + ".sql");
                     pw = new PrintWriter(temp);
                     String createSql = s.createSql(this.getCore());
@@ -653,9 +650,6 @@ public class MainFrame extends javax.swing.JFrame
                 pw = new PrintWriter(f);
                 pw.println("SET FOREIGN_KEY_CHECKS = 0; BEGIN;");
                 for(WoWHeadData s : items) {
-                    if (s.name.contains("'")) {
-                        s.name = s.name.replaceAll("'", "");
-                    }
                     pw.println(s.createSql(this.getCore()));
                 }
                 pw.println("SET FOREIGN_KEY_CHECKS = 1; COMMIT;");

@@ -5,6 +5,7 @@ import wowDatatypes.EquipmentSlot;
 import wowDatatypes.ItemClass;
 import wowDatatypes.ItemSubClass;
 import wowDatatypes.SpellStats;
+import wowhead_itemreader.Util;
 import wowhead_itemreader.WoWHeadData;
 
 /**
@@ -24,7 +25,7 @@ public class RaidCraftSheme extends BasicSheme {
         String query = "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
                 "VALUES (\n" +
                 itemId + "," +
-                "'" + data.name + "'," +
+                "'" + Util.escapeSQL(data.name) + "'," +
                 getMinecraftId(data.itemClass, data.itemSubClass, data.itemQuality, data.inventoryType) + "," +
                 data.itemLevel + "," +
                 "'" + getItemQuality(data.itemQuality) + "'," +
