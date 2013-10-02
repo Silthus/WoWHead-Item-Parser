@@ -651,12 +651,14 @@ public class MainFrame extends javax.swing.JFrame
             else
             {
                 pw = new PrintWriter(f);
+                pw.println("SET FOREIGN_KEY_CHECKS = 0; BEGIN;");
                 for(WoWHeadData s : items) {
                     if (s.name.contains("'")) {
                         s.name = s.name.replaceAll("'", "");
                     }
                     pw.println(s.createSql(this.getCore()));
                 }
+                pw.println("SET FOREIGN_KEY_CHECKS = 1; COMMIT;");
             }
             pw.flush();
             return true;

@@ -21,8 +21,7 @@ public class RaidCraftSheme extends BasicSheme {
     public String createQuery(WoWHeadData data, String colums) {
 
         int itemId = data.itemId;
-        String query = "SET FOREIGN_KEY_CHECKS = 0; BEGIN;\n" +
-                "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
+        String query = "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
                 "VALUES (\n" +
                 itemId + "," +
                 "'" + data.name + "'," +
@@ -76,7 +75,6 @@ public class RaidCraftSheme extends BasicSheme {
                     "'level'," +
                     data.reqLevel + ");\n";
         }
-        query += "COMMIT;SET FOREIGN_KEY_CHECKS = 1;";
         return query;
     }
 
