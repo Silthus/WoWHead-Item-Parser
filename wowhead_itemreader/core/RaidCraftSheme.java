@@ -51,7 +51,7 @@ public class RaidCraftSheme extends BasicSheme {
                     "'" + getItemType(data.itemClass, data.itemSubClass) + "', " +
                     data.dmg_min1 + ", " +
                     data.dmg_max1 + ", " +
-                    data.attSpeed / 100.0 + ");\n";
+                    (data.attSpeed / 1000.0) + ");\n";
         }
         // now lets parse the attributes
         for (SpellStats spellStats : data.spellStatsAr) {
