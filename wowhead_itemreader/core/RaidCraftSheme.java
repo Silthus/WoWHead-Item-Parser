@@ -22,7 +22,7 @@ public class RaidCraftSheme extends BasicSheme {
     public String createQuery(WoWHeadData data, String colums) {
 
         int itemId = data.itemId;
-        String query = "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, item_type, info) \n" +
+        String query = "INSERT INTO `rcitems_items` (id, name, minecraft_id, item_level, quality, sell_price, bind_type, item_type, info) \n" +
                 "VALUES (\n" +
                 itemId + "," +
                 "'" + Util.escapeSQL(data.name) + "'," +
@@ -30,6 +30,7 @@ public class RaidCraftSheme extends BasicSheme {
                 data.itemLevel + "," +
                 "'" + getItemQuality(data.itemQuality) + "'," +
                 getSellPrice(data.sellPrice) + "," +
+                "'" + getBondingType(data.bonding) + "'," +
                 "'" + getItemClass(data.itemClass) + "'," +
                 "'WoW Import');\n" +
                 "INSERT INTO `rcitems_equipment` (id, item_id, equipment_slot, durability) \n" +
@@ -368,6 +369,21 @@ public class RaidCraftSheme extends BasicSheme {
                 return "LEGENDARY";
             default:
                 return "";
+        }
+    }
+
+    private String getBondingType(int data) {
+
+        switch (data) {
+            default:
+            case 0:
+                return "NONE";
+            case 1:
+                return "BOP";
+            case 2:
+                return "BOE";
+            case 4:
+                return "QUEST";
         }
     }
 
